@@ -2,10 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
   const [topic, setTopic] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const proCamera = [
     { letter: "P", word: "Perspective", description: "Camera angle or point of view" },
@@ -19,11 +24,41 @@ const Index = () => {
     { letter: "A", word: "Aesthetic", description: "Overall visual style" },
   ];
 
-  const handleGenerate = () => {
-    if (!topic.trim()) return;
-    
-    const prompt = `${topic}, professional perspective, ultra high resolution 8K, detailed objects and composition, vibrant color palette, cinematic lighting and atmosphere, digital art medium, advanced ray tracing effects, photorealistic rendering, modern aesthetic design`;
-    setGeneratedPrompt(prompt);
+  const handleGenerate = async () => {
+    if (!topic.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an image idea first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-prompt', {
+        body: { topic: topic.trim() }
+      });
+
+      if (error) throw error;
+
+      if (data?.generatedPrompt) {
+        setGeneratedPrompt(data.generatedPrompt);
+        toast({
+          title: "Success",
+          description: "AI-powered prompt generated successfully!",
+        });
+      }
+    } catch (error) {
+      console.error('Error generating prompt:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to generate prompt",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -66,8 +101,20 @@ const Index = () => {
               />
             </div>
 
-            <Button onClick={handleGenerate} className="w-full" size="lg">
-              Generate Prompt
+            <Button 
+              onClick={handleGenerate} 
+              className="w-full" 
+              size="lg"
+              disabled={isLoading || !topic.trim()}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                'Generate Prompt'
+              )}
             </Button>
 
             {generatedPrompt && (
