@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Copy, RotateCcw } from "lucide-react";
 
 const Index = () => {
   const [topic, setTopic] = useState("");
@@ -43,7 +43,14 @@ const Index = () => {
       if (error) throw error;
 
       if (data?.generatedPrompt) {
-        setGeneratedPrompt(data.generatedPrompt);
+        // Clean and organize the prompt response
+        const cleanedPrompt = data.generatedPrompt
+          .replace(/\*\*/g, '') // Remove markdown bold
+          .replace(/\*/g, '') // Remove markdown italic
+          .replace(/#+\s*/g, '') // Remove markdown headers
+          .trim();
+        
+        setGeneratedPrompt(cleanedPrompt);
         toast({
           title: "Success",
           description: "AI-powered prompt generated successfully!",
@@ -59,6 +66,37 @@ const Index = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCopyPrompt = async () => {
+    if (!generatedPrompt) return;
+    
+    try {
+      await navigator.clipboard.writeText(generatedPrompt);
+      toast({
+        title: "Copied!",
+        description: "Prompt copied to clipboard",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy prompt",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRegeneratePrompt = async () => {
+    if (!topic.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an image idea first",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    await handleGenerate();
   };
 
   return (
@@ -119,12 +157,40 @@ const Index = () => {
 
             {generatedPrompt && (
               <div className="space-y-4 animate-fade-in">
-                <label className="block text-sm font-medium">Generated Prompt</label>
-                <Textarea
-                  value={generatedPrompt}
-                  readOnly
-                  className="min-h-[120px] text-base"
-                />
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-medium">Generated Prompt (Ready to Copy)</label>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleCopyPrompt}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copy Prompt
+                    </Button>
+                    <Button
+                      onClick={handleRegeneratePrompt}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      disabled={isLoading}
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Regenerate
+                    </Button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border-2 border-dashed border-primary/30 p-4">
+                  <Textarea
+                    value={generatedPrompt}
+                    readOnly
+                    className="min-h-[120px] text-base border-0 bg-transparent resize-none focus:ring-0 font-mono"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  â¨ Optimized and ready to use in any AI image generator
+                </p>
               </div>
             )}
           </div>
@@ -170,7 +236,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t mt-20">
         <div className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-          <p>© 2025 AI Image Prompt Generator. All rights reserved.</p>
+          <p>Â© 2025 AI Image Prompt Generator. All rights reserved.</p>
         </div>
       </footer>
     </div>
