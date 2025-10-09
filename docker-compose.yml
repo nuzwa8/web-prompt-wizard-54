@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  web-prompt-wizard:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - prompt-wizard-network
+
+  # Optional: Add nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - web-prompt-wizard
+    restart: unless-stopped
+    networks:
+      - prompt-wizard-network
+    profiles:
+      - with-nginx
+
+networks:
+  prompt-wizard-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
