@@ -1,248 +1,73 @@
-# Web Prompt Wizard 🧙
+# Welcome to your Lovable project
 
-AI-powered prompt optimization tool with copy, regenerate, and structured output features. A complete web application for optimizing, generating, and enhancing AI prompts with a mobile-responsive and user-friendly interface.
+## Project info
 
-## Features ✨
+**URL**: https://lovable.dev/projects/9d980aae-4356-48e6-8e94-5f554adeb9da
 
-- **Prompt Optimization**: Enhance existing prompts for better clarity and effectiveness
-- **Prompt Generation**: Create new prompts based on your requirements
-- **Prompt Regeneration**: Generate multiple variations of existing prompts
-- **Copy-Ready Output**: All prompts are structured and ready to copy-paste
-- **Mobile Responsive**: Fully optimized for mobile and tablet devices
-- **Template Library**: Pre-built templates for different categories
-- **Real-time Validation**: Input validation with character counters
-- **Error Handling**: Comprehensive error handling and user feedback
-- **Security**: Built-in security measures and rate limiting
+## How can I edit this code?
 
-## Quick Start 🚀
+There are several ways of editing your application.
 
-### Prerequisites
+**Use Lovable**
 
-- Node.js (v16 or higher)
-- npm or yarn
-- OpenAI API key
+Simply visit the [Lovable Project](https://lovable.dev/projects/9d980aae-4356-48e6-8e94-5f554adeb9da) and start prompting.
 
-### Installation
+Changes made via Lovable will be committed automatically to this repo.
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/web-prompt-wizard.git
-   cd web-prompt-wizard
-   ```
+**Use your preferred IDE**
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-3. **Environment Setup**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` file with your configuration:
-   ```bash
-   # Server Configuration
-   PORT=3000
-   NODE_ENV=development
-   
-   # OpenAI API Configuration
-   OPENAI_API_KEY=your_openai_api_key_here
-   OPENAI_MODEL=gpt-3.5-turbo
-   OPENAI_MAX_TOKENS=1000
-   OPENAI_TEMPERATURE=0.7
-   
-   # Rate Limiting
-   RATE_LIMIT_WINDOW_MS=900000
-   RATE_LIMIT_MAX_REQUESTS=100
-   
-   # Security
-   CORS_ORIGIN=http://localhost:3000
-   API_SECRET_KEY=your_secret_key_here
-   ```
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-4. **Start the application**
-   ```bash
-   # Development
-   npm run dev
-   
-   # Production
-   npm start
-   ```
+Follow these steps:
 
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-## Usage Guide 📖
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-### Optimize Mode
-- Enter your existing prompt
-- Select category and complexity
-- Click "Optimize Prompt"
-- Copy the improved, structured prompt
+# Step 3: Install the necessary dependencies.
+npm i
 
-### Generate Mode
-- Describe your requirements
-- Select category and complexity
-- Click "Generate Prompt"
-- Get a completely new prompt
-
-### Regenerate Mode
-- Enter your prompt
-- Get multiple variations
-- Choose the best variation
-
-### Copy Functionality
-- **Single Copy**: Click copy button next to any prompt
-- **Main Copy**: Copy the primary result
-- **Keyboard Shortcut**: Ctrl/Cmd + C when results are visible
-
-### Templates
-- Click "Templates" button
-- Browse by category
-- Click any template to use it
-
-## API Documentation 📚
-
-### Base URL
-```
-http://localhost:3000/api
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-### Endpoints
+**Edit a file directly in GitHub**
 
-#### Optimize Prompt
-```http
-POST /prompts/optimize
-Content-Type: application/json
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-{
-  "prompt": "Your prompt text (10-2000 characters)",
-  "type": "optimize",
-  "category": "creative|technical|business|educational|general",
-  "complexity": "simple|intermediate|advanced"
-}
-```
+**Use GitHub Codespaces**
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "original": "Original prompt",
-    "optimized": "Optimized prompt text",
-    "improvements": ["List of improvements"],
-    "structure": {
-      "context": "Context section",
-      "task": "Task definition",
-      "format": "Output format",
-      "examples": "Examples"
-    },
-    "copyReady": true,
-    "timestamp": "2025-10-09T20:18:11.000Z"
-  }
-}
-```
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-#### Generate Prompt
-```http
-POST /prompts/generate
-Content-Type: application/json
+## What technologies are used for this project?
 
-{
-  "requirements": "Your requirements (5-500 characters)",
-  "category": "creative|technical|business|educational|general",
-  "complexity": "simple|intermediate|advanced"
-}
-```
+This project is built with:
 
-#### Regenerate Prompt
-```http
-POST /prompts/regenerate
-Content-Type: application/json
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-{
-  "prompt": "Your prompt text (10-2000 characters)",
-  "type": "regenerate",
-  "category": "creative|technical|business|educational|general",
-  "complexity": "simple|intermediate|advanced"
-}
-```
+## How can I deploy this project?
 
-#### Get Templates
-```http
-GET /prompts/templates
-```
+Simply open [Lovable](https://lovable.dev/projects/9d980aae-4356-48e6-8e94-5f554adeb9da) and click on Share -> Publish.
 
-#### Health Check
-```http
-GET /health
-```
+## Can I connect a custom domain to my Lovable project?
 
-## Development 🛠️
+Yes, you can!
 
-### Project Structure
-```
-web-prompt-wizard/
-├── public/                 # Frontend files
-│   ├── css/               # Stylesheets
-│   ├── js/                # JavaScript
-│   └── index.html         # Main HTML
-├── src/                   # Backend source
-│   ├── middleware/        # Express middleware
-│   ├── routes/           # API routes
-│   ├── services/         # Business logic
-│   └── utils/            # Utilities
-├── tests/                # Test files
-├── logs/                 # Log files
-├── server.js             # Main server file
-└── package.json          # Dependencies
-```
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-### Scripts
-
-```bash
-# Development
-npm run dev          # Start with nodemon
-npm start            # Start production server
-
-# Testing
-npm test             # Run all tests
-npm run test:watch   # Run tests in watch mode
-
-# Code Quality
-npm run lint         # Run ESLint
-npm run format       # Format with Prettier
-npm run audit        # Security audit
-npm run audit-fix    # Fix security issues
-```
-
-### Security 🔒
-
-- **Helmet.js**: Security headers
-- **CORS**: Cross-origin resource sharing protection
-- **Rate Limiting**: Prevents abuse
-- **Input Validation**: Joi schema validation
-- **Input Sanitization**: XSS prevention
-- **Environment Variables**: Secure configuration
-
-## Testing 🧪
-
-```bash
-# Run all tests
-npm test
-
-# Run with coverage
-npm test -- --coverage
-
-# Run specific test file
-npm test tests/api.test.js
-```
-
-## License 📄
-
-MIT License
-
----
-
-**Built with ❤️ by MiniMax Agent**
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
