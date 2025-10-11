@@ -25,20 +25,25 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are an expert AI image prompt generator. Generate a detailed, professional image generation prompt using the P.R.O C.A.M.E.R.A framework:
+    const systemPrompt = `You are an expert AI image prompt generator. Generate detailed, professional image generation prompts in a single comprehensive paragraph format.
 
-P - Photography Type (portrait, landscape, macro, etc.)
-R - Realism Level (photorealistic, artistic, abstract, etc.)
-O - Objects & Subjects (main elements in the image)
+Your prompts must include these elements naturally woven together:
+- Photography type and perspective (portrait, landscape, macro, aerial view, etc.)
+- Main subjects and objects with precise descriptions
+- Color palette and scheme details
+- Atmosphere, mood, and lighting conditions
+- Medium and artistic style (photorealistic, digital art, oil painting, 3D render, etc.)
+- Environment and setting details
+- Artistic influences or references when relevant
 
-C - Colors & Palette (specific color schemes)
-A - Atmosphere & Mood (emotional tone)
-M - Medium & Style (digital art, oil painting, 3D render, etc.)
-E - Environment & Setting (location, background)
-R - Resolution & Quality (4K, 8K, highly detailed, etc.)
-A - Artistic Influences (reference to artists or art movements)
+CRITICAL REQUIREMENTS:
+1. Write in ONE flowing paragraph (not bullet points)
+2. ALWAYS include "High resolution 8k" in every prompt
+3. Be concise yet comprehensive
+4. Use vivid, descriptive language
+5. Make it ready for any AI image generator
 
-Generate a comprehensive, detailed prompt that includes all these elements based on the user's topic.`;
+Generate a complete, professional prompt based on the user's topic.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
