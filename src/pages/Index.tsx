@@ -4,15 +4,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Copy, RotateCcw, Sparkles } from "lucide-react";
+import { Loader2, Copy, RotateCcw } from "lucide-react";
 
 const Index = () => {
   const [topic, setTopic] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isEnhancing, setIsEnhancing] = useState(false);
   const { toast } = useToast();
 
+  const proCamera = [
+    { letter: "P", word: "Perspective", description: "Camera angle or point of view" },
+    { letter: "R", word: "Resolution", description: "Image quality and detail level" },
+    { letter: "O", word: "Objects", description: "Main subjects and elements" },
+    { letter: "C", word: "Colors", description: "Color palette and mood" },
+    { letter: "A", word: "Atmosphere", description: "Lighting and ambiance" },
+    { letter: "M", word: "Medium", description: "Art style or technique" },
+    { letter: "E", word: "Effects", description: "Special visual effects" },
+    { letter: "R", word: "Realism", description: "Level of photorealism" },
+    { letter: "A", word: "Aesthetic", description: "Overall visual style" },
+  ];
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
@@ -89,56 +99,14 @@ const Index = () => {
     await handleGenerate();
   };
 
-  const handleEnhancePrompt = async () => {
-    if (!generatedPrompt.trim()) {
-      toast({
-        title: "Error",
-        description: "Please generate a prompt first",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsEnhancing(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-prompt', {
-        body: { 
-          topic: `Enhance and improve this prompt for better AI image generation: ${generatedPrompt}`,
-          enhance: true
-        }
-      });
-
-      if (error) throw error;
-
-      if (data?.generatedPrompt) {
-        const cleanedPrompt = data.generatedPrompt
-          .replace(/\*\*/g, '')
-          .replace(/\*/g, '')
-          .replace(/#+\s*/g, '')
-          .trim();
-        
-        setGeneratedPrompt(cleanedPrompt);
-        toast({
-          title: "Enhanced!",
-          description: "Prompt has been enhanced successfully!",
-        });
-      }
-    } catch (error) {
-      console.error('Error enhancing prompt:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to enhance prompt",
-        variant: "destructive",
-      });
-    } finally {
-      setIsEnhancing(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
+        <div className="inline-block rounded-full bg-primary/10 px-4 py-2 mb-6">
+          <span className="text-primary font-semibold text-sm">P.R.O C.A.M.E.R.A Framework</span>
+        </div>
+        
         <h1 className="text-5xl md:text-6xl font-bold mb-6">
           Transform Ideas Into{" "}
           <span className="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent">
@@ -147,7 +115,7 @@ const Index = () => {
         </h1>
         
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          AI-powered CoachPro image prompt generator
+          AI-powered image prompt generator using the proven P.R.O C.A.M.E.R.A formula for stunning results
         </p>
         
         <Button size="lg" className="text-lg px-8 py-6">
@@ -202,16 +170,6 @@ const Index = () => {
                       Copy Prompt
                     </Button>
                     <Button
-                      onClick={handleEnhancePrompt}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2"
-                      disabled={isEnhancing}
-                    >
-                      <Sparkles className="h-4 w-4" />
-                      {isEnhancing ? "Enhancing..." : "Enhance"}
-                    </Button>
-                    <Button
                       onClick={handleRegeneratePrompt}
                       variant="outline"
                       size="sm"
@@ -237,6 +195,23 @@ const Index = () => {
             )}
           </div>
 
+          {/* P.R.O C.A.M.E.R.A Framework Display */}
+          <div className="mt-12">
+            <h3 className="text-2xl font-bold mb-6 text-center">P.R.O C.A.M.E.R.A Framework</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {proCamera.map((item, idx) => (
+                <div key={idx} className="bg-secondary/50 rounded-lg p-4 border border-primary/20">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl font-bold text-primary">{item.letter}</span>
+                    <div>
+                      <h4 className="font-semibold">{item.word}</h4>
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -245,9 +220,9 @@ const Index = () => {
         <h2 className="text-4xl font-bold text-center mb-12">Why Use Our Generator</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
+            { title: "P.R.O C.A.M.E.R.A Framework", desc: "9-point formula for perfect prompts" },
             { title: "Instant Generation", desc: "Get professional prompts in seconds" },
             { title: "AI Optimized", desc: "Works with all major AI image tools" },
-            { title: "Enhanced Quality", desc: "Improve prompts with one click" },
             { title: "Easy to Use", desc: "No technical knowledge needed" },
           ].map((feature, idx) => (
             <div key={idx} className="bg-card rounded-xl border p-6 hover:shadow-lg transition-shadow">
