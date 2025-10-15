@@ -25,20 +25,19 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are an expert AI image prompt generator. Generate a detailed, professional image generation prompt using the P.R.O C.A.M.E.R.A framework:
+    const systemPrompt = `You are an expert AI image prompt generator. Generate a detailed, professional image generation prompt in a SINGLE COMPREHENSIVE PARAGRAPH format.
 
-P - Photography Type (portrait, landscape, macro, etc.)
-R - Realism Level (photorealistic, artistic, abstract, etc.)
-O - Objects & Subjects (main elements in the image)
+Use the P.R.O C.A.M.E.R.A framework principles internally (Photography Type, Realism Level, Objects & Subjects, Colors & Palette, Atmosphere & Mood, Medium & Style, Environment & Setting, Resolution & Quality, Artistic Influences) but DO NOT mention the framework or list these elements separately.
 
-C - Colors & Palette (specific color schemes)
-A - Atmosphere & Mood (emotional tone)
-M - Medium & Style (digital art, oil painting, 3D render, etc.)
-E - Environment & Setting (location, background)
-R - Resolution & Quality (4K, 8K, highly detailed, etc.)
-A - Artistic Influences (reference to artists or art movements)
+CRITICAL REQUIREMENTS:
+1. Write as ONE flowing paragraph (not a list or sections)
+2. ALWAYS include "High resolution 8k" in the prompt
+3. Make it concise yet comprehensive (2-4 sentences maximum)
+4. Include all framework elements naturally woven into the description
+5. Make it vivid, detailed, and ready to use in any AI image generator
+6. Automatically enhance the prompt with relevant artistic details, lighting, composition, and quality descriptors
 
-Generate a comprehensive, detailed prompt that includes all these elements based on the user's topic.`;
+Generate a professional, enhanced prompt based on the user's topic.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

@@ -10,6 +10,7 @@ const Index = () => {
   const [topic, setTopic] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const { toast } = useToast();
 
   const proCamera = [
@@ -99,14 +100,46 @@ const Index = () => {
     await handleGenerate();
   };
 
+  const handleEnhancePrompt = async () => {
+    if (!generatedPrompt) return;
+    
+    setIsEnhancing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-prompt', {
+        body: { topic: `Enhance this prompt to make it more detailed and vivid: ${generatedPrompt}` }
+      });
+
+      if (error) throw error;
+
+      if (data?.generatedPrompt) {
+        const cleanedPrompt = data.generatedPrompt
+          .replace(/\*\*/g, '')
+          .replace(/\*/g, '')
+          .replace(/#+\s*/g, '')
+          .trim();
+        
+        setGeneratedPrompt(cleanedPrompt);
+        toast({
+          title: "Enhanced!",
+          description: "Prompt has been enhanced successfully",
+        });
+      }
+    } catch (error) {
+      console.error('Error enhancing prompt:', error);
+      toast({
+        title: "Error",
+        description: "Failed to enhance prompt",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
-        <div className="inline-block rounded-full bg-primary/10 px-4 py-2 mb-6">
-          <span className="text-primary font-semibold text-sm">P.R.O C.A.M.E.R.A Framework</span>
-        </div>
-        
         <h1 className="text-5xl md:text-6xl font-bold mb-6">
           Transform Ideas Into{" "}
           <span className="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent">
@@ -115,12 +148,8 @@ const Index = () => {
         </h1>
         
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          AI-powered image prompt generator using the proven P.R.O C.A.M.E.R.A formula for stunning results
+          AI-powered CoachPro image prompt generator
         </p>
-        
-        <Button size="lg" className="text-lg px-8 py-6">
-          Start Creating Free
-        </Button>
       </section>
 
       {/* Interactive Demo Section */}
@@ -157,9 +186,9 @@ const Index = () => {
 
             {generatedPrompt && (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <label className="block text-sm font-medium">Generated Prompt (Ready to Copy)</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <Button
                       onClick={handleCopyPrompt}
                       variant="outline"
@@ -167,7 +196,17 @@ const Index = () => {
                       className="flex items-center gap-2"
                     >
                       <Copy className="h-4 w-4" />
-                      Copy Prompt
+                      Copy
+                    </Button>
+                    <Button
+                      onClick={handleEnhancePrompt}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      disabled={isEnhancing}
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      {isEnhancing ? "Enhancing..." : "Enhance"}
                     </Button>
                     <Button
                       onClick={handleRegeneratePrompt}
